@@ -1,0 +1,24 @@
+# Service to start the minecraft server
+
+# Start the server: systemctl start minecraft.service
+# Stop the server: systemctl stop minecraft.service
+# Hard restart the server: systemctl restart minecraft.service
+# Enable launch on boot (this is the default): systemctl enable minecraft.service
+# Disable Launch at Boot: systemctl disable minecraft.service
+# Print server service status: systemctl status minecraft.service
+
+# Access the console with: screen -r
+# Send a command to the console with: screen -S minecraft -p 0 -X stuff "COMMAND^M"
+
+[Unit]
+Description=Minecraft
+Requires=local-fs.target network-online.target
+After=local-fs.target network-online.target
+
+[Service]
+Type=simple
+User=minecraft
+ExecStart=/usr/bin/screen -D -m -S "minecraft" -t "minecraft" /home/minecraft/paper/minecraft_service.sh
+
+[Install]
+WantedBy=multi-user.target

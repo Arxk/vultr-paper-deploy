@@ -1,0 +1,45 @@
+#!/bin/sh
+
+# Adds a new user 'minecraft'
+adduser --disabled-password --gecos "" --shell /bin/bash minecraft
+usermod -g sudo minecraft
+passwd -d minecraft
+
+# Creates a swapfile (replace 4G accordingly)
+fallocate -l 4G /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+echo "/swapfile none swap sw 0 0" | tee -a /etc/fstab
+
+# Install dependencies for minecraft
+apt-get update
+apt-get install openjdk-8-jre -y
+apt-get install screen -y
+
+# Install cockpit to remotely manage the system (https://cockpit-project.org/)
+apt-get install cockpit -y
+systemctl enable cockpit.socket
+
+# Install megatools to download/upload my minecraft server files
+apt-get install megatools
+
+# Download my minecraft server files from a MEGA folder (at 'minecraft/paper')
+su - minecraft # Use the user 'minecraft'
+mkdir paper
+megacopy --username email@gmail.com --password password1234 --local /home/minecraft/paper --remote /Root/minecraft/paper --download
+
+# Adds exec permissions for scripts
+chmod +x /home/minecraft/paper/minecraft_server.sh
+chmod +x /home/minecraft/paper/minecraft_service.sh
+chmod +x /home/minecraft/paper/minecraft_autodestroy.py
+
+# Adds the autodestroy script to the crontab (executes every 30 minutes)
+(crontab -l 2>/dev/null; echo "*/30 * * * * /home/minecraft/paper/minecraft_autodestroy.py") | sudo crontab -
+
+# Creates a systemd service (to startup the server in case of a restart)
+sudo cp -f /home/minecraft/paper/minecraft.service /etc/systemd/system/
+
+# Starts the minecraft service
+sudo systemctl enable minecraft.service
+sudo systemctl start minecraft.service
