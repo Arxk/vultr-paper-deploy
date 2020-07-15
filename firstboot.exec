@@ -29,6 +29,9 @@ su - minecraft # Use the user 'minecraft'
 mkdir paper
 megacopy --username email@gmail.com --password password1234 --local /home/minecraft/paper --remote /Root/minecraft/paper --download
 
+# Sets proper ownershipt to the minecraft server files
+sudo chown -R minecraft:minecraft /home/minecraft/paper
+
 # Adds exec permissions for scripts
 chmod +x /home/minecraft/paper/minecraft_server.sh
 chmod +x /home/minecraft/paper/minecraft_service.sh
