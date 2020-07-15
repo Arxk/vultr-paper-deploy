@@ -37,8 +37,8 @@ chmod +x /home/minecraft/paper/minecraft_server.sh
 chmod +x /home/minecraft/paper/minecraft_service.sh
 chmod +x /home/minecraft/paper/minecraft_autodestroy.py
 
-# Adds the autodestroy script to the crontab (executes every 30 minutes)
-(crontab -l 2>/dev/null; echo "*/30 * * * * /home/minecraft/paper/minecraft_autodestroy.py") | sudo crontab -
+# Adds the autodestroy script to the crontab (executes every 15 minutes)
+(crontab -l 2>/dev/null; echo "*/15 * * * * /home/minecraft/paper/minecraft_autodestroy.py") | sudo crontab -
 
 # Creates a systemd service (to startup the server in case of a restart)
 sudo cp -f /home/minecraft/paper/minecraft.service /etc/systemd/system/
