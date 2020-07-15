@@ -25,12 +25,11 @@ systemctl enable cockpit.socket
 apt-get install megatools
 
 # Download my minecraft server files from a MEGA folder (at 'minecraft/paper')
-su - minecraft # Use the user 'minecraft'
 mkdir paper
 megacopy --username email@gmail.com --password password1234 --local /home/minecraft/paper --remote /Root/minecraft/paper --download
 
 # Sets proper ownershipt to the minecraft server files
-sudo chown -R minecraft:minecraft /home/minecraft/paper
+chown -R minecraft:minecraft /home/minecraft/paper
 
 # Adds exec permissions for scripts
 chmod +x /home/minecraft/paper/minecraft_server.sh
@@ -38,11 +37,11 @@ chmod +x /home/minecraft/paper/minecraft_service.sh
 chmod +x /home/minecraft/paper/minecraft_autodestroy.py
 
 # Adds the autodestroy script to the crontab (executes every 15 minutes)
-(crontab -l 2>/dev/null; echo "*/15 * * * * /home/minecraft/paper/minecraft_autodestroy.py") | sudo crontab -
+(crontab -l 2>/dev/null; echo "*/15 * * * * /home/minecraft/paper/minecraft_autodestroy.py") | crontab -
 
 # Creates a systemd service (to startup the server in case of a restart)
-sudo cp -f /home/minecraft/paper/minecraft.service /etc/systemd/system/
+cp -f /home/minecraft/paper/minecraft.service /etc/systemd/system/
 
 # Starts the minecraft service
-sudo systemctl enable minecraft.service
-sudo systemctl start minecraft.service
+systemctl enable minecraft.service
+systemctl start minecraft.service
