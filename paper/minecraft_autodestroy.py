@@ -18,7 +18,7 @@ sleep(5) # Wait 5 seconds
 
 def autodestroy_server(save):
   # Stops the minecraft service
-  system("systemctl stop minecraft.service")
+  system("sudo systemctl stop minecraft.service")
   # Saves the files on the cloud
   if (save):
     #
@@ -40,8 +40,8 @@ def autodestroy_server(save):
   servers_request = Request(api_url + '/server/list?tag=minecraft', headers={'API-Key' : api_key})
   servers = loads(urlopen(servers_request).read())
   for key in servers:
-    destroy_request = Request(api_url + '/server/destroy', headers={'API-Key' : api_key}, data={'SUBID': key})
-    destroy = loads(urlopen(destroy_request).read())
+    destroy_request = Request(api_url + '/server/destroy', headers={'API-Key' : api_key}, data=urlencode({'SUBID': key}).encode())
+    destroy = urlopen(destroy_request)
     print(destroy)
 
 # Reads all the connected players from the minecraft server log
